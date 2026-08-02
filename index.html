@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benoit Lepottier — Design Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#" class="nav-mark">Benoit Lepottier</a>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero wrap">
+  <div class="hero-eyebrow">Available for select projects</div>
+  <h1>Visual design, <em>quietly</em> considered.</h1>
+  <p class="hero-sub">I'm a designer working across identity, print, and digital — building things with more restraint than noise. This is a running index of selected work.</p>
+</section>
+
+<section class="work wrap" id="work">
+  <div class="section-head">
+    <div class="section-title">Selected work</div>
+    <div class="section-count" id="sectionCount"></div>
+  </div>
+
+  <div class="index-shell">
+    <div class="index-list" id="indexList"></div>
+
+    <div class="preview-frame" id="previewFrame">
+      <div class="preview-placeholder" id="previewPlaceholder">Hover a project to preview it here.</div>
+    </div>
+  </div>
+</section>
+
+<section class="about wrap" id="about">
+  <p class="about-text">I care about clarity — in the work itself and in how it gets made. Every project starts with a question worth answering, not a trend worth chasing.</p>
+  <div class="about-details">
+    <div>
+      <div class="detail-label">Based in</div>
+      <div class="detail-value">Your City, Country</div>
+    </div>
+    <div>
+      <div class="detail-label">Focus</div>
+      <div class="detail-value">Identity systems, editorial layout, packaging, type</div>
+    </div>
+    <div>
+      <div class="detail-label">Previously</div>
+      <div class="detail-value">Studio Name, Agency Name</div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap" id="contact">
+  <div class="contact-title">Have a project in mind? <a href="mailto:ben.lepottier@gmail.com">Let's talk →</a></div>
+  <div class="footer-row">
+    <div>© 2026 Benoit Lepottier</div>
+    <div class="footer-links">
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Are.na</a>
+    </div>
+  </div>
+</footer>
+
+<script src="projects.js"></script>
+<script>
+  const listEl = document.getElementById('indexList');
+  const previewFrame = document.getElementById('previewFrame');
+  const placeholder = document.getElementById('previewPlaceholder');
+  const countEl = document.getElementById('sectionCount');
+
+  countEl.textContent = `01 — ${PROJECTS.length.toString().padStart(2, '0')}`;
+
+  // Build the index list rows from projects.js
+  listEl.innerHTML = PROJECTS.map(p => `
+    <a class="index-item" href="${p.page}" data-id="${p.id}">
+      <span class="index-num">${p.id}</span>
+      <span class="index-name">${p.title}</span>
+      <span class="index-medium">${p.medium}</span>
+      <span class="index-year">${p.year}</span>
+    </a>
+  `).join('');
+
+  // Build one preview <img> per project, hidden until hovered
+  PROJECTS.forEach(p => {
+    const img = document.createElement('img');
+    img.src = p.cover;
+    img.className = 'preview-img';
+    img.dataset.id = p.id;
+    previewFrame.appendChild(img);
+  });
+
+  const images = document.querySelectorAll('.preview-img');
+  const items = document.querySelectorAll('.index-item');
+
+  items.forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      const id = item.getAttribute('data-id');
+      placeholder.style.display = 'none';
+      images.forEach(img => img.classList.toggle('active', img.dataset.id === id));
+    });
+  });
+
+  listEl.addEventListener('mouseleave', () => {
+    images.forEach(img => img.classList.remove('active'));
+    placeholder.style.display = 'block';
+  });
+</script>
+
+</body>
+</html>
