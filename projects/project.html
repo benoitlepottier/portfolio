@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Project — Benoit Lepottier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="../index.html" class="nav-mark">Benoit Lepottier</a>
+    <div class="nav-links">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<section class="project-header wrap">
+  <a href="../index.html#work" class="back-link">← Back to work</a>
+  <div class="project-meta" id="projectMeta"></div>
+  <h1 class="project-title" id="projectTitle"></h1>
+  <p class="project-desc" id="projectDesc"></p>
+</section>
+
+<section class="project-gallery wrap" id="projectGallery"></section>
+
+<footer class="wrap" id="contact">
+  <div class="contact-title">Have a project in mind? <a href="mailto:ben.lepottier@gmail.com">Let's talk →</a></div>
+  <div class="footer-row">
+    <div>© 2026 Benoit Lepottier</div>
+    <div class="footer-links">
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Are.na</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../projects.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const project = PROJECTS.find(p => p.id === id);
+
+  if (project) {
+    document.getElementById('pageTitle').textContent = `${project.title} — Benoit Lepottier`;
+    document.getElementById('projectMeta').textContent = `${project.medium} — ${project.year}`;
+    document.getElementById('projectTitle').textContent = project.title;
+    document.getElementById('projectDesc').textContent = project.description;
+
+    const gallery = document.getElementById('projectGallery');
+    gallery.innerHTML = project.images.map(src => `<img src="${src}" alt="${project.title}">`).join('');
+  } else {
+    document.getElementById('projectTitle').textContent = 'Project not found';
+    document.getElementById('projectDesc').textContent = 'Check the id in the URL matches an entry in projects.js.';
+  }
+</script>
+
+</body>
+</html>
