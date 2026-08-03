@@ -1,1 +1,75 @@
-Put this project's images in this folder (e.g. cover.jpg, detail-1.jpg). Reference them in ../../projects.js and from project-02.html using a relative path like images/project-02/cover.jpg
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>benoitlepottier — Design Portfolio</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="index.html" class="nav-mark">benoit lepottier</a>
+    <div class="nav-links">
+      <a href="index.html">projects</a>
+      <a href="about.html">about</a>
+    </div>
+  </nav>
+</header>
+
+<section class="work" id="work">
+  <div class="index-shell">
+    <div class="index-list" id="indexList"></div>
+
+    <div class="preview-frame" id="previewFrame">
+      <div class="preview-line"></div>
+    </div>
+  </div>
+</section>
+
+<script src="projects.js"></script>
+<script>
+  const listEl = document.getElementById('indexList');
+  const previewFrame = document.getElementById('previewFrame');
+
+  // Build the index list rows from projects.js
+  listEl.innerHTML = PROJECTS.map(p => `
+    <a class="index-item" href="${p.page}" data-id="${p.id}">
+      <span class="index-name">${p.title}</span>
+    </a>
+  `).join('');
+
+  // Build one preview <img> per project, each with a random offset + rotation
+  // so it looks collaged on top of the dashed line rather than lined up.
+  PROJECTS.forEach(p => {
+    const img = document.createElement('img');
+    img.src = p.cover;
+    img.className = 'preview-img';
+    img.dataset.id = p.id;
+
+    const angle = (Math.random() * 14 - 7).toFixed(1);       // -7deg to 7deg
+    const offsetX = Math.round(Math.random() * 50 - 25);      // -25px to 25px
+    const offsetY = Math.round(Math.random() * 36 - 18);      // -18px to 18px
+    img.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) rotate(${angle}deg)`;
+
+    previewFrame.appendChild(img);
+  });
+
+  const images = document.querySelectorAll('.preview-img');
+  const items = document.querySelectorAll('.index-item');
+
+  items.forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      const id = item.getAttribute('data-id');
+      images.forEach(img => img.classList.toggle('active', img.dataset.id === id));
+    });
+  });
+
+  listEl.addEventListener('mouseleave', () => {
+    images.forEach(img => img.classList.remove('active'));
+  });
+</script>
+
+</body>
+</html>
