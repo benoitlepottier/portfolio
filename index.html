@@ -40,18 +40,17 @@
     </a>
   `).join('');
 
-  // Build one preview <img> per project, each with a random offset + rotation
-  // so it looks collaged on top of the dashed line rather than lined up.
+  // Build one preview <img> per project. We'll size and position them via CSS
   PROJECTS.forEach(p => {
     const img = document.createElement('img');
     img.src = p.cover;
     img.className = 'preview-img';
     img.dataset.id = p.id;
+    img.alt = p.title;
 
-    const angle = (Math.random() * 14 - 7).toFixed(1);       // -7deg to 7deg
-    const offsetX = Math.round(Math.random() * 50 - 25);      // -25px to 25px
-    const offsetY = Math.round(Math.random() * 36 - 18);      // -18px to 18px
-    img.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) rotate(${angle}deg)`;
+    // initial transform values (centered, no offset). We'll set random values on hover.
+    img.style.opacity = 0;
+    img.style.transition = 'opacity 0.35s ease, transform 0.45s ease';
 
     previewFrame.appendChild(img);
   });
@@ -59,16 +58,53 @@
   const images = document.querySelectorAll('.preview-img');
   const items = document.querySelectorAll('.index-item');
 
+  function randomBetween(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function positionPreviewFrame() {
+    // Align the top of the box with the top of the index list
+    const rect = listEl.getBoundingClientRect();
+    // use the distance from the viewport top
+    previewFrame.style.top = `${Math.max( rect.top, 10)}px`;
+  }
+
+  // Set initial positioning and update on resize/scroll
+  positionPreviewFrame();
+  window.addEventListener('resize', positionPreviewFrame);
+  window.addEventListener('scroll', positionPreviewFrame, { passive: true });
+
   items.forEach(item => {
     item.addEventListener('mouseenter', () => {
       const id = item.getAttribute('data-id');
-      images.forEach(img => img.classList.toggle('active', img.dataset.id === id));
+      images.forEach(img => {
+        const isActive = img.dataset.id === id;
+        img.classList.toggle('active', isActive);
+
+        if (isActive) {
+          // set a fresh random rotation and a slight random offset when shown
+          const angle = randomBetween(-12, 12).toFixed(1); // deg
+          const offsetX = Math.round(randomBetween(-12, 12));
+          const offsetY = Math.round(randomBetween(-12, 12));
+          img.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) rotate(${angle}deg)`;
+          img.style.opacity = 1;
+        } else {
+          // hide non-active images
+          img.style.opacity = 0;
+        }
+      });
     });
   });
 
   listEl.addEventListener('mouseleave', () => {
-    images.forEach(img => img.classList.remove('active'));
+    images.forEach(img => {
+      img.classList.remove('active');
+      img.style.opacity = 0;
+    });
   });
+
+  // Recalculate frame position after images load (in case fonts/layout shift)
+  window.addEventListener('load', positionPreviewFrame);
 </script>
 
 </body>
