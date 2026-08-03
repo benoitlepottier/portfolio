@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Project — benoitlepottier</title>
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="../index.html" class="nav-mark">benoit lepottier</a>
+    <div class="nav-links">
+      <a href="../index.html">projects</a>
+      <a href="../about.html">about</a>
+    </div>
+  </nav>
+</header>
+
+<section class="project-header wrap">
+  <a href="../index.html" class="back-link">← Back to work</a>
+  <div class="project-meta" id="projectMeta"></div>
+  <h1 class="project-title" id="projectTitle"></h1>
+  <p class="project-desc" id="projectDesc"></p>
+</section>
+
+<section class="project-gallery wrap" id="projectGallery"></section>
+
+<script src="../projects.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const project = PROJECTS.find(p => p.id === id);
+
+  if (project) {
+    document.getElementById('pageTitle').textContent = `${project.title} — benoitlepottier`;
+    document.getElementById('projectMeta').textContent = `${project.medium} — ${project.year}`;
+    document.getElementById('projectTitle').textContent = project.title;
+    document.getElementById('projectDesc').textContent = project.description;
+
+    const gallery = document.getElementById('projectGallery');
+    gallery.innerHTML = project.images.map(src => `<img src="${src}" alt="${project.title}">`).join('');
+  } else {
+    document.getElementById('projectTitle').textContent = 'Project not found';
+    document.getElementById('projectDesc').textContent = 'Check the id in the URL matches an entry in projects.js.';
+  }
+</script>
+
+</body>
+</html>
