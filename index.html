@@ -50,7 +50,7 @@
 
     // initial transform values (centered, no offset). We'll set random values on hover.
     img.style.opacity = 0;
-    img.style.transition = 'opacity 0.35s ease, transform 0.45s ease';
+    img.style.transition = 'opacity 0.35s ease';
 
     previewFrame.appendChild(img);
   });
@@ -82,10 +82,11 @@
         img.classList.toggle('active', isActive);
 
         if (isActive) {
-          // set a fresh random rotation and a slight random offset when shown
-          const angle = randomBetween(-12, 12).toFixed(1); // deg
+          // choose a small random rotation between -5 and 5 degrees
+          const angle = randomBetween(-5, 5).toFixed(1); // deg
           const offsetX = Math.round(randomBetween(-12, 12));
           const offsetY = Math.round(randomBetween(-12, 12));
+          // set transform immediately (no transform transition)
           img.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) rotate(${angle}deg)`;
           img.style.opacity = 1;
         } else {
