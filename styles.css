@@ -83,37 +83,70 @@ nav {
   font-weight: 700;
 }
 
+/* ---------- PREVIEW: centered grey box with subtle X ---------- */
 .preview-frame {
   position: fixed;
-  top: 120px;
+  /* centered horizontally */
   left: 50%;
   transform: translateX(-50%);
-  width: min(420px, 80vw);
-  height: 380px;
+  /* roughly half the page width, with reasonable caps */
+  width: min(50vw, 680px);
+  height: min(48vh, 520px);
+  /* solid grey box background */
+  background: #EEEEEE;
+  border-radius: 6px;
+  box-shadow: 0 8px 18px rgba(17,17,17,0.06);
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  overflow: hidden;
+  /* keep pointer events for child imgs */
+  pointer-events: none;
 }
 
-.preview-line {
-  width: 100%;
-  border-top: 2px dashed #999999;
-}
+/* top alignment is handled in JS (previewFrame.style.top) */
 
+/* remove old dashed line element (hide if present) */
+.preview-line { display: none; }
+
+/* subtle X across the box using pseudo elements */
+.preview-frame::before,
+.preview-frame::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 140%;
+  height: 1px; /* light line weight */
+  background: rgba(17,17,17,0.06); /* very light */
+  transform-origin: center;
+  pointer-events: none;
+}
+.preview-frame::before { transform: translateY(-50%) rotate(45deg); }
+.preview-frame::after  { transform: translateY(-50%) rotate(-45deg); }
+
+/* preview images sized similarly to the box and centered.
+   Pointer-events enabled so links still respond via the index list. */
 .preview-frame img {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(240px, 55vw);
-  aspect-ratio: 4/5;
+  /* make images similar in size to the box but slightly inset */
+  width: calc(100% - 64px);
+  height: calc(100% - 64px);
   object-fit: cover;
-  border-radius: 2px;
+  transform: translate(-50%, -50%) rotate(0deg);
+  border-radius: 4px;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.35s ease;
+  pointer-events: auto;
 }
 
-.preview-frame img.active { opacity: 1; }
+/* visible/active image */
+.preview-frame img.active {
+  opacity: 1;
+}
 
 /* ---------- PROJECT DETAIL PAGE ---------- */
 .project-header {
