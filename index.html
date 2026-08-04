@@ -65,8 +65,8 @@
   function positionPreviewFrame() {
     // Align the top of the box with the top of the index list
     const rect = listEl.getBoundingClientRect();
-    // use the distance from the viewport top
-    previewFrame.style.top = `${Math.max( rect.top, 10)}px`;
+    // use the distance from the viewport top (align exactly)
+    previewFrame.style.top = `${rect.top}px`;
   }
 
   // Set initial positioning and update on resize/scroll
