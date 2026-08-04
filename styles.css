@@ -83,7 +83,7 @@ nav {
   font-weight: 700;
 }
 
-/* ---------- PREVIEW: centered grey box with subtle X ---------- */
+/* ---------- PREVIEW: outlined box with grey border and corner-to-corner X ---------- */
 .preview-frame {
   position: fixed;
   /* centered horizontally */
@@ -92,54 +92,55 @@ nav {
   /* roughly half the page width, with reasonable caps */
   width: min(50vw, 680px);
   height: min(48vh, 520px);
-  /* solid grey box background */
-  background: #EEEEEE;
+  /* no fill, subtle grey border */
+  background: transparent;
   border-radius: 6px;
-  box-shadow: 0 8px 18px rgba(17,17,17,0.06);
+  border: 1px solid var(--gray);
+  box-shadow: none;
   z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  /* keep pointer events for child imgs */
+  overflow: visible; /* allow X to reach corners */
+  /* keep pointer events off for the frame itself */
   pointer-events: none;
 }
 
 /* top alignment is handled in JS (previewFrame.style.top) */
 
-/* remove old dashed line element (hide if present) */
+/* hide legacy dashed line element if present */
 .preview-line { display: none; }
 
-/* subtle X across the box using pseudo elements */
+/* X across the box using pseudo elements centered and long enough to hit corners */
 .preview-frame::before,
 .preview-frame::after {
   content: '';
   position: absolute;
-  left: 0;
+  left: 50%;
   top: 50%;
-  width: 140%;
-  height: 1px; /* light line weight */
-  background: rgba(17,17,17,0.06); /* very light */
+  width: 160%;
+  height: 1px;
+  background: var(--gray);
   transform-origin: center;
   pointer-events: none;
+  opacity: 0.5;
 }
-.preview-frame::before { transform: translateY(-50%) rotate(45deg); }
-.preview-frame::after  { transform: translateY(-50%) rotate(-45deg); }
+.preview-frame::before { transform: translate(-50%, -50%) rotate(45deg); }
+.preview-frame::after  { transform: translate(-50%, -50%) rotate(-45deg); }
 
-/* preview images sized similarly to the box and centered.
-   Pointer-events enabled so links still respond via the index list. */
+/* preview images sized a bit larger so they feel proportional to the outlined box */
 .preview-frame img {
   position: absolute;
   top: 50%;
   left: 50%;
-  /* make images similar in size to the box but slightly inset */
-  width: calc(100% - 64px);
-  height: calc(100% - 64px);
+  /* slightly inset from the border so the image doesn't touch it */
+  width: calc(100% - 32px);
+  height: calc(100% - 32px);
   object-fit: cover;
   transform: translate(-50%, -50%) rotate(0deg);
   border-radius: 4px;
   opacity: 0;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.35s ease, transform 0.25s ease;
   pointer-events: auto;
 }
 
